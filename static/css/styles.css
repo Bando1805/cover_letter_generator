@@ -1,0 +1,31 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+}
+
+.container {
+    max-width: 800px;
+}
+
+input[type="submit"] {
+    display: block;
+    margin-top: 10px;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+}
+
+h1 {
+    text-align: center;
+}
+
+select.form-control.custom-dropdown {
+    max-width: 250px;
+}
+
+#loading {
+    font-size: 1.2rem;
+    margin-top: 20px;
+}

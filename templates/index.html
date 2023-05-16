@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <title>Job Application Generator</title>
+    <script>
+        function onSelectChange() {
+            const selectedValue = document.getElementById("inputTypeSelect").value;
+            if (selectedValue === "text") {
+                document.getElementById("linkedinInput").style.display = "none";
+                document.getElementById("jobDescriptionInput").style.display = "block";
+            }  else if (selectedValue === "linkedin") {
+                document.getElementById("linkedinInput").style.display = "block";
+                document.getElementById("jobDescriptionInput").style.display = "none";
+               }
+        }
+
+        function submitForm() {
+            const form = document.getElementById("mainForm");
+            if (form.checkValidity()) {
+                form.submit();
+                showLoadingAnimation();
+            }
+        }
+
+        function showLoadingAnimation() {
+            document.getElementById("mainForm").style.display = "none";
+            document.getElementById("loadingAnimation").style.display = "block";
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mt-5">Job Application Generator</h1>
+        <form id="mainForm" action="/" method="post" enctype="multipart/form-data" class="mt-5">
+            <div class="form-group">
+                <label for="CV">Upload CV (PDF):</label>
+                <input type="file" name="CV" class="form-control-file" accept="application/pdf" required>
+            </div>
+            <div class="form-group">
+                <label for="inputTypeSelect">Choose input method:</label>
+                <select id="inputTypeSelect" class="form-control custom-dropdown" onchange="onSelectChange()">
+                    <option value="text" selected>Job description text</option>
+                    <option value="linkedin">LinkedIn URL</option>
+                </select>
+            </div>
+            <div class="form-group" id="linkedinInput" style="display: none;">
+                <label for="job_url">LinkedIn Job URL:</label>
+                <input type="text" name="job_url" class="form-control" placeholder="https://...">
+            </div>
+            <div class="form-group" id="jobDescriptionInput">
+                <label for="job_description">Job description:</label>
+                <textarea name="job_description" class="form-control" rows="5" placeholder="Paste job description here..."></textarea>
+            </div>
+            <div class="form-group">
+                <label for="special_request">Special request for the cover letter:</label>
+                <input type="text" name="special_request" class="form-control" placeholder="Example: Start the cover letter with -Dear Hiring Manager-">
+            </div>
+            <input type="button" value="Generate Cover Letter" class="btn btn-primary" onclick="submitForm();">
+            <div id="error_message" class="mt-3 text-danger" style="display: none;"></div>
+            
+        </form>
+        <div id="loadingAnimation" class="text-center" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-2">The AI is creating your cover letter, let the magic happen...</p>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+

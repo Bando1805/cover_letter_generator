@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+    
+
+        .cover-letter-editable {
+            width: 100%;
+            height: 400px;
+            overflow-y: scroll;
+        }
+        .chat-controls {
+            display: flex;
+            align-items: center;
+            margin-top: 1rem;
+        }
+        .chat-input {
+            flex-grow: 1;
+            margin-right: 1rem;
+        }
+        .btn-send {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-send:hover {
+            background-color: #0056b3;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+    </style>
+    <title>Generated Cover Letter</title>
+    <script>
+        
+        function copyToClipboard() {
+            const textArea = document.getElementById("coverLetterText");
+            const originalContentEditable = document.getElementById("coverLetterEditable");
+            textArea.value = originalContentEditable.innerText;
+            textArea.select();
+            document.execCommand("copy");
+            alert("Cover letter copied to clipboard.");
+        }
+
+        function redirectToHome() {
+            window.location.href = '/';
+        }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("btnSend").addEventListener("click", async function() {
+            const chatInput = document.getElementById("chatInput");
+            const coverLetterEditable = document.getElementById("coverLetterEditable");
+
+            if (chatInput.value.trim() !== "") {
+                const response = await fetch("/modify_cover_letter", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        chat_input: chatInput.value,
+                        cover_letter: coverLetterEditable.innerText
+                    })
+                });
+
+                const modifiedCoverLetter = await response.text();
+                coverLetterEditable.innerHTML = `<p>${modifiedCoverLetter.replace(/\n/g, "</p><p>")}</p>`;
+                chatInput.value = "";
+            }
+        });
+    });
+
+
+        
+
+    </script>
+</head>
+<body>
+<div class="container">
+    {% if cover_letter %}
+        <h1 class="text-center mt-5">Generated Cover Letter</h1>
+        <textarea id="coverLetterText" class="form-control mt-3" rows="15" style="display: none;"></textarea>
+        <div class="form-control mt-3 cover-letter-editable" id="coverLetterEditable" contenteditable="true"><p>{% autoescape false %}{{ cover_letter|replace("\n", "</p><p>") }}{% endautoescape %}</p></div>
+        <div class="chat-controls">
+            <input type="text" class="form-control chat-input" id="chatInput" placeholder="Type your message...">
+            <button class="btn-send" id="btnSend">Send</button>
+        </div>
+        <div class="button-container">
+            <button onclick="copyToClipboard()" class="btn btn-secondary">Copy to Clipboard</button>
+            <a href="/download/{{ filename }}" class="btn btn-primary">Download as PDF</a>
+        </div>
+    {% else %}
+        <h1 class="text-center mt-5">Error</h1>
+        <p class="text-center mt-3">There was an error while trying to extract the job description from LinkedIn. Please try copying and pasting the job description instead.</p>
+        <div class="text-center mt-3">
+            <button onclick="redirectToHome()" class="btn btn-primary">Go back to Home</button>
+        </div>
+    {% endif %}
+</div>
+</body>
+</html>
